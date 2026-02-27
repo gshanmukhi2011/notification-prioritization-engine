@@ -76,3 +76,27 @@ Step 5: The system logs the decision with explanation.
 - Explainability for every decision
 - Important notifications must never be silently lost
 - Human rules configurable without redeployment
+---
+
+## 5. Duplicate Prevention Strategy
+
+The system prevents both exact and near-duplicate notifications.
+
+### Exact Duplicate Handling
+
+- If a dedupe_key is provided, it is stored in a fast storage (Redis) with a time-to-live (TTL).
+- If another event arrives with the same dedupe_key within the TTL window, it is suppressed.
+- The suppression is logged in the audit table.
+
+### Near-Duplicate Handling
+
+If dedupe_key is missing or unreliable:
+
+- The system compares message content and event type.
+- If a similar notification was sent to the same user within a short time window (for example, 5 minutes), it is considered a near-duplicate.
+- A similarity penalty is applied in the scoring model.
+
+### Safety Principle
+
+Important notifications are never suppressed silently.  
+Every suppressed event is logged with a reason for auditing.
