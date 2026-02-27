@@ -100,3 +100,40 @@ If dedupe_key is missing or unreliable:
 
 Important notifications are never suppressed silently.  
 Every suppressed event is logged with a reason for auditing.
+---
+
+## 6. Alert Fatigue Mitigation Strategy
+
+The system reduces alert fatigue using the following mechanisms:
+
+### 1. Frequency Caps
+
+- Maximum 5 notifications per 10 minutes.
+- Maximum 10 notifications per 1 hour.
+- If limits are exceeded, lower-priority notifications are delayed or suppressed.
+
+### 2. Cooldown Window
+
+If a user receives too many notifications in a short time:
+
+- A cooldown period is applied.
+- During cooldown, only high-priority notifications are allowed.
+
+### 3. Priority-Based Filtering
+
+- Critical notifications always bypass fatigue limits.
+- Promotional notifications are suppressed during noisy periods.
+
+### 4. Deferred Delivery
+
+Medium-priority notifications may be scheduled for later instead of being sent immediately.
+
+### 5. Digest Mode (Optional Enhancement)
+
+Low-priority notifications can be grouped and sent as a single summary instead of multiple individual alerts.
+
+---
+
+### Design Principle
+
+The system balances user experience and business needs by ensuring important notifications are delivered while minimizing unnecessary interruptions.
