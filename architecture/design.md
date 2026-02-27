@@ -137,3 +137,43 @@ Low-priority notifications can be grouped and sent as a single summary instead o
 ### Design Principle
 
 The system balances user experience and business needs by ensuring important notifications are delivered while minimizing unnecessary interruptions.
+---
+
+## 7. Fallback Strategy & Reliability
+
+The system is designed to fail safely and avoid losing important notifications.
+
+### 1. AI or Scoring Service Failure
+
+If the scoring component is slow or unavailable:
+
+- The system falls back to rule-based logic only.
+- Critical notifications are still delivered immediately.
+- Non-critical notifications are handled conservatively (prefer Later instead of Never).
+
+### 2. Redis Failure
+
+If fast storage (Redis) is unavailable:
+
+- The system uses database counters as backup.
+- Duplicate prevention falls back to basic message comparison.
+
+### 3. Scheduler Failure
+
+If the scheduler service fails:
+
+- Time-sensitive notifications are sent immediately.
+- Deferred notifications are retried.
+
+### 4. No Silent Failures
+
+- Every failure is logged.
+- Important notifications are never dropped without logging.
+- Monitoring alerts are triggered for system failures.
+
+---
+
+### Reliability Principle
+
+The system prioritizes safety and user trust over aggressive suppression.  
+It ensures important alerts are not missed even during partial outages.
